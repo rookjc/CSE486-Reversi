@@ -17,15 +17,15 @@ public class ReversiTournament {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		int nGames = 1; 
-		long timeout = 10;
+		int nGames = 5; 
+		long timeout = 1;
 		TimeUnit timeoutUnit = TimeUnit.SECONDS;
 
 		// List of the strategies in the tournament 
 		List<Strategy> strategies = Lists.newArrayList();
 
 		strategies.add(new RandomStrategy());
-		strategies.add(new Human());
+		strategies.add(new AI_Rook_Ritchie());
 
 		// The number of wins of each strategy 
 		Map<Strategy, Integer> wins = Maps.newHashMap();

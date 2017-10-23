@@ -3,13 +3,16 @@ package edu.miami.cse.reversi;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class AI_Rook_Ritchie implements Strategy {
-	private final int dlimit = 4;
+	private final int dlimit = 8;
+	private Player us;
 
 	@Override
 	public Square chooseSquare(Board board) {
-		Node current = new Node(board, true); // isMax = true because we are maximizer 
+		Node current = new Node(board, true); // isMax = true because we are maximizer
+		us = board.getCurrentPlayer();
 		int value = alphaBetaPruningSearch(current, dlimit, Integer.MIN_VALUE, Integer.MAX_VALUE, true); 
 		for(Node child : current.children) {
 			if(child.value == current.value) {
@@ -69,7 +72,58 @@ public class AI_Rook_Ritchie implements Strategy {
 	 * @return
 	 */
 	private int evaluation(Board board) {
-		return 0;
+		return cornersControlled(board)*64 + tilesScore(board);
+	}
+	
+	private int tilesScore(Board board){
+		return board.getPlayerSquareCounts().get(us) - board.getPlayerSquareCounts().get(us.opponent());
+	}
+	
+	// Returns |our corners| - |their corners|
+	private int cornersControlled(Board board)
+	{
+		Map<Square, Player> mappings = board.getSquareOwners();
+		int count = 0;
+		Player them = us.opponent();
+		
+		for(int x = 0; x <= 7; x += 7)
+		{
+			for(int y = 0; y <= 7; y += 7)
+			{
+				Player owner = mappings.get(new Square(x,y));
+				if(owner == us)
+					count++;
+				else if(owner == them)
+					count --;
+			}
+		}
+		
+		
+//		// Top left
+//		if(mappings.get(new Square(0,0)) == us)
+//			count++;
+//		else if(mappings.get(new Square(0,0)) == them)
+//			count --;
+//		
+//		// Bottom left
+//		if(mappings.get(new Square(7,0)) == us)
+//			count++;
+//		else if(mappings.get(new Square(7,0)) == them)
+//			count --;
+//		
+//		// Top right
+//		if(mappings.get(new Square(0,7)) == us)
+//			count++;
+//		else if(mappings.get(new Square(0,7)) == them)
+//			count --;
+//		
+//		// Bottom right
+//		if(mappings.get(new Square(7,7)) == us)
+//			count++;
+//		else if(mappings.get(new Square(7,7)) == them)
+//			count --;
+//		
+		return count;
 	}
 
 	private class Node {
