@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AI_Rook_Ritchie implements Strategy {
-	private final int dlimit = 8;
+	private final int dlimit = 3;
 	private Player us;
 
 	@Override
@@ -25,7 +25,7 @@ public class AI_Rook_Ritchie implements Strategy {
 	private int alphaBetaPruningSearch(Node node, int depth, int alpha, int beta, boolean isMax) {
 		boolean terminal = node.board.getCurrentPossibleSquares().size() == 0; 
 		if (depth == 0 || terminal) {
-			node.value = evaluation(node.board);
+			node.value = evaluation(node.board, node);
 			return node.value; // evaluation function
 		}
 
@@ -71,12 +71,35 @@ public class AI_Rook_Ritchie implements Strategy {
 	 * @param board
 	 * @return
 	 */
-	private int evaluation(Board board) {
-		return cornersControlled(board)*64 + tilesScore(board);
-	}
+	private int evaluation(Board board, Node node) {
+		return cornersControlled(board)*30 + tilesScore(board) +
+				30*availableMoveScore(board, node);
+	} 
 	
 	private int tilesScore(Board board){
 		return board.getPlayerSquareCounts().get(us) - board.getPlayerSquareCounts().get(us.opponent());
+	}
+	
+	private int availableMoveScore(Board board, Node node){
+		int ourMoves, theirMoves;
+		if(board.getCurrentPlayer() == us){
+			ourMoves = board.getCurrentPossibleSquares().size();
+			theirMoves = node.parent.board.getCurrentPossibleSquares().size();
+		}
+		else{
+			theirMoves = board.getCurrentPossibleSquares().size();
+			ourMoves = node.parent.board.getCurrentPossibleSquares().size();
+		}
+		
+		if(ourMoves + theirMoves == 0)
+			return 0;
+		
+		return (ourMoves - theirMoves)/(ourMoves + theirMoves);
+		// This maps the score to the interval [-1,1]
+		// -1 if the opponent controls all the moves
+		// 0 if the available moves are even
+		// 1 if we control all the moves
+			
 	}
 	
 	// Returns |our corners| - |their corners|
@@ -84,7 +107,7 @@ public class AI_Rook_Ritchie implements Strategy {
 	{
 		Map<Square, Player> mappings = board.getSquareOwners();
 		int count = 0;
-		Player them = us.opponent();
+
 		
 		for(int x = 0; x <= 7; x += 7)
 		{
@@ -93,7 +116,7 @@ public class AI_Rook_Ritchie implements Strategy {
 				Player owner = mappings.get(new Square(x,y));
 				if(owner == us)
 					count++;
-				else if(owner == them)
+				else if(owner == us.opponent())
 					count --;
 			}
 		}
@@ -127,7 +150,7 @@ public class AI_Rook_Ritchie implements Strategy {
 	}
 
 	private class Node {
-		// private Node parent;
+		 private Node parent;
 		// private int alpha;
 		// private int beta;
 		private int value; // minimax value
@@ -156,6 +179,7 @@ public class AI_Rook_Ritchie implements Strategy {
 			for (Square sq : board.getCurrentPossibleSquares()) {
 				Node node = new Node(board.play(sq), !this.isMax);
 				node.action = sq; 
+				node.parent = this;
 				this.children.add(node);
 			}
 		}

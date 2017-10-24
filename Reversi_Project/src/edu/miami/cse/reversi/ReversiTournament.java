@@ -17,8 +17,8 @@ public class ReversiTournament {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		int nGames = 5; 
-		long timeout = 1;
+		int nGames = 50; 
+		long timeout = 2;
 		TimeUnit timeoutUnit = TimeUnit.SECONDS;
 
 		// List of the strategies in the tournament 
@@ -50,6 +50,8 @@ public class ReversiTournament {
 						winner = reversi.getWinner(reversi.play(board));
 					} catch (StrategyTimedOutException e) {
 						winner = e.getOpponentStrategy();
+						System.out.println("Timed out: " + e.getTimedOutStrategy().toString());
+
 					}
 					// If one of the strategies timed out, the opponent is considered the winner 
 					if (winner != null) {
@@ -62,6 +64,7 @@ public class ReversiTournament {
 						winner = reversi.getWinner(reversi.play(board));
 					} catch (StrategyTimedOutException e) {
 						winner = e.getOpponentStrategy();
+						System.out.println("Timed out: " + e.getTimedOutStrategy().toString());
 					}
 					if (winner != null) {
 						wins.put(winner, wins.get(winner) + 1);
