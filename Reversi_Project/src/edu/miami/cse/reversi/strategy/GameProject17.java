@@ -23,8 +23,19 @@ public class GameProject17 implements Strategy {
 		}
 		return null; // no solution
 	}
+	
 
+	/**
+	 * Performs an alpha beta pruning search to determine the best move to make
+	 * @param node The node of the tree being considered
+	 * @param depth The current depth in the tree
+	 * @param alpha Used in alpha beta
+	 * @param beta Used in alpha beta
+	 * @param isMax current node is maximizer
+	 * @return The minimax value of the node chosen
+	 */
 	private int alphaBetaPruningSearch(Node node, int depth, int alpha, int beta, boolean isMax) {
+		// Checks if the node is a leaf
 		boolean terminal = node.board.getCurrentPossibleSquares().size() == 0;
 		if (depth == 0 || terminal) {
 			node.value = evaluation(node.board, node);
@@ -278,11 +289,21 @@ public class GameProject17 implements Strategy {
 
 		return value;
 	}
-
+	
+	/**
+	 * Takes into acount the number of tiles each player controls
+	 * @param board The current state
+	 * @return The difference in square counts (ours - theirs)
+	 */
 	private int tilesScore(Board board) {
 		return board.getPlayerSquareCounts().get(us) - board.getPlayerSquareCounts().get(us.opponent());
 	}
-
+	/**
+	 * Takes into account the number of available moves for both players
+	 * @param board The current state
+	 * @param node Used to look backwards one move
+	 * @return the score on an interval [0-1]
+	 */
 	private double availableMoveScore(Board board, Node node) {
 		int ourMoves, theirMoves;
 		if (board.getCurrentPlayer() == us) {
@@ -304,7 +325,11 @@ public class GameProject17 implements Strategy {
 
 	}
 
-	// Returns |our corners| - |their corners|
+	/**
+	 * Takes into account the corners controlled
+	 * @param board Current state
+	 * @return Difference in corners controlled (ours - theirs)
+	 */
 	private int cornersControlled(Board board) {
 		Map<Square, Player> mappings = board.getSquareOwners();
 		int count = 0;
@@ -318,49 +343,23 @@ public class GameProject17 implements Strategy {
 					count--;
 			}
 		}
-
-		// // Top left
-		// if(mappings.get(new Square(0,0)) == us)
-		// count++;
-		// else if(mappings.get(new Square(0,0)) == them)
-		// count --;
-		//
-		// // Bottom left
-		// if(mappings.get(new Square(7,0)) == us)
-		// count++;
-		// else if(mappings.get(new Square(7,0)) == them)
-		// count --;
-		//
-		// // Top right
-		// if(mappings.get(new Square(0,7)) == us)
-		// count++;
-		// else if(mappings.get(new Square(0,7)) == them)
-		// count --;
-		//
-		// // Bottom right
-		// if(mappings.get(new Square(7,7)) == us)
-		// count++;
-		// else if(mappings.get(new Square(7,7)) == them)
-		// count --;
-		//
 		return count;
 	}
-
+	
+	
+	// The simple node class used in the alpha beta pruning search
 	private class Node {
 		private Node parent;
-		// private int alpha;
-		// private int beta;
+
 		private int value; // minimax value
-		private Board board;
+		private Board board; // The state of this node
 		private List<Node> children;
 		private Square action; // the square chosen to reach this node
 		private boolean isMax; // indicate if current node is maximizer or
 								// minimizer
 
 		public Node(Board board, boolean isMax) {
-			// this.parent = parent;
-			// this.alpha = alpha;
-			// this.beta = beta;
+
 			this.board = board;
 			this.value = 0; // to be generated later
 			this.children = new ArrayList<>();
