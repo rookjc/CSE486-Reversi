@@ -115,8 +115,8 @@ public class GameProject17 implements Strategy {
 	}
 
 	private static final int STABLE_EDGE_WEIGHT = 20;
-	private static final int TWO_AWAY_FROM_CORNER_WEIGHT = 10;
 	private static final int ONE_AWAY_FROM_CORNER_WEIGHT = -10; // negative, we want to avoid these spaces
+	private static final int TWO_AWAY_FROM_CORNER_WEIGHT = 10; // positive, we want to take these spaces
 
 	/**
 	 * Give preference to corners and pieces 2 away from them, for open corners.
@@ -164,7 +164,7 @@ public class GameProject17 implements Strategy {
 					Player playerHere = mappings.get(new Square(row, col));
 					if (playerHere == null)
 						continue;
-					if (Math.max(row, col) == 1 && Math.min(row, col) <= 1)
+					if (Math.max(row, col) == 1)
 						value += ONE_AWAY_FROM_CORNER_WEIGHT * (playerHere == us ? 1 : -1);
 					else if (row != 1 && col != 1)
 						value += TWO_AWAY_FROM_CORNER_WEIGHT * (playerHere == us ? 1 : -1);
@@ -203,7 +203,7 @@ public class GameProject17 implements Strategy {
 					Player playerHere = mappings.get(new Square(row, col));
 					if (playerHere == null)
 						continue;
-					if (Math.max(row, 7 - col) == 1 && Math.min(row, 7 - col) <= 1)
+					if (Math.max(row, 7 - col) == 1)
 						value += ONE_AWAY_FROM_CORNER_WEIGHT * (playerHere == us ? 1 : -1);
 					else if (row != 1 && col != 6)
 						value += TWO_AWAY_FROM_CORNER_WEIGHT * (playerHere == us ? 1 : -1);
@@ -240,7 +240,7 @@ public class GameProject17 implements Strategy {
 					Player playerHere = mappings.get(new Square(row, col));
 					if (playerHere == null)
 						continue;
-					if (Math.max(7 - row, 7 - col) == 1 && Math.min(7 - row, 7 - col) <= 1)
+					if (Math.max(7 - row, 7 - col) == 1)
 						value += ONE_AWAY_FROM_CORNER_WEIGHT * (playerHere == us ? 1 : -1);
 					else if (row != 6 && col != 6)
 						value += TWO_AWAY_FROM_CORNER_WEIGHT * (playerHere == us ? 1 : -1);
@@ -279,7 +279,7 @@ public class GameProject17 implements Strategy {
 					Player playerHere = mappings.get(new Square(row, col));
 					if (playerHere == null)
 						continue;
-					if (Math.max(7 - row, col) == 1 && Math.min(7 - row, col) <= 1)
+					if (Math.max(7 - row, col) == 1)
 						value += ONE_AWAY_FROM_CORNER_WEIGHT * (playerHere == us ? 1 : -1);
 					else if (row != 6 && col != 1)
 						value += TWO_AWAY_FROM_CORNER_WEIGHT * (playerHere == us ? 1 : -1);
