@@ -16,16 +16,16 @@ public class ReversiTournament {
 	 * Runs a round-robin tournament over Reversi strategies.
 	 */
 	public static void main(String[] args) throws Exception {
-
-		int nGames = 50; 
-		long timeout = 2;
+		
+		int nGames = 5; 
+		long timeout = 1;
 		TimeUnit timeoutUnit = TimeUnit.SECONDS;
 
 		// List of the strategies in the tournament 
 		List<Strategy> strategies = Lists.newArrayList();
 
 		strategies.add(new RandomStrategy());
-		strategies.add(new AI_Rook_Ritchie());
+		strategies.add(new GameProject17());
 
 		// The number of wins of each strategy 
 		Map<Strategy, Integer> wins = Maps.newHashMap();

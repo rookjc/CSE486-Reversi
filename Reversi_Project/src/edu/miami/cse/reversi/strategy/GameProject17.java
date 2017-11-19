@@ -1,11 +1,12 @@
-package edu.miami.cse.reversi;
+package edu.miami.cse.reversi.strategy;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class AI_Rook_Ritchie implements Strategy {
+import edu.miami.cse.reversi.*;
+
+public class GameProject17 implements Strategy {
 	private final int dlimit = 3;
 	private Player us;
 
@@ -75,8 +76,8 @@ public class AI_Rook_Ritchie implements Strategy {
 	 *         strongly
 	 */
 	private int evaluation(Board board, Node node) {
-		return winScore(board) + cornersControlled(board) * 30 + tilesScore(board)
-				+ 30 * availableMoveScore(board, node) + 20 * cornersAndStablePieces(board);
+		return (int)(winScore(board) + cornersControlled(board) * 30 + tilesScore(board)
+				+ 30 * availableMoveScore(board, node) + 20 * cornersAndStablePieces(board));
 	}
 
 	/**
@@ -282,7 +283,7 @@ public class AI_Rook_Ritchie implements Strategy {
 		return board.getPlayerSquareCounts().get(us) - board.getPlayerSquareCounts().get(us.opponent());
 	}
 
-	private int availableMoveScore(Board board, Node node) {
+	private double availableMoveScore(Board board, Node node) {
 		int ourMoves, theirMoves;
 		if (board.getCurrentPlayer() == us) {
 			ourMoves = board.getCurrentPossibleSquares().size();
@@ -295,7 +296,7 @@ public class AI_Rook_Ritchie implements Strategy {
 		if (ourMoves + theirMoves == 0)
 			return 0;
 
-		return (ourMoves - theirMoves) / (ourMoves + theirMoves);
+		return 1.0 * (ourMoves - theirMoves) / (ourMoves + theirMoves);
 		// This maps the score to the interval [-1,1]
 		// -1 if the opponent controls all the moves
 		// 0 if the available moves are even
