@@ -347,7 +347,9 @@ public class GameProject17 implements Strategy {
 	}
 	
 	
-	// The simple node class used in the alpha beta pruning search
+	/**
+	 *  The simple node class used in the alpha beta pruning search 
+	 */
 	private class Node {
 		private Node parent;
 
@@ -357,7 +359,12 @@ public class GameProject17 implements Strategy {
 		private Square action; // the square chosen to reach this node
 		private boolean isMax; // indicate if current node is maximizer or
 								// minimizer
-
+		/**
+		 * Node constructor which accepts the current board state and boolean isMax, 
+		 * whether current node is maximizer or minimizer 
+		 * @param board
+		 * @param isMax
+		 */
 		public Node(Board board, boolean isMax) {
 
 			this.board = board;
@@ -370,7 +377,10 @@ public class GameProject17 implements Strategy {
 		public String toString() {
 			return super.toString();
 		}
-
+		
+		/**
+		 * method to generate all children of current node 
+		 */
 		public void generateChildren() {
 			for (Square sq : board.getCurrentPossibleSquares()) {
 				Node node = new Node(board.play(sq), !this.isMax);
